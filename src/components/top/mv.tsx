@@ -20,6 +20,7 @@ const leftArea = css`
 
 const title = css`
   text-align: center;
+  font-size: 7.2rem;
 `
 
 const rightArea = css`
@@ -29,6 +30,7 @@ const rightArea = css`
 
 const footprintBase = css`
   position: absolute;
+  transform: rotate(35deg);
   transition: opacity 1s ease 0s;
 `
 
@@ -40,81 +42,60 @@ const leftBottom = css`
 
 const rightBottom = css`
   ${footprintBase}
+  transition-delay: 500ms;
   bottom: 20px;
   right: 0px;
 `
 
-const hidden = css`
-  opacity: 0;
-`
-
 const leftTop = css`
   ${footprintBase}
+  transition-delay: 1000ms;
   top: 20px;
   left: 20px;
 `
 
 const rightTop = css`
   ${footprintBase}
+  transition-delay: 1500ms;
   top: 20px;
   right: -20px;
 `
+const img = css`
+  width: 75%;
+  margin: 0 auto;
+  display: block;
+`
+
+const hidden = css`
+  opacity: 0;
+`
 
 const footprintAlt = "footprint"
+const wrapperCss = [leftBottom, rightBottom, leftTop, rightTop]
 
 interface MVProps {
   isRendered: boolean
 }
 
 const MV: React.FC<MVProps> = ({ isRendered = false }): React.ReactElement => {
-  const [renderingLists, setRendered] = useState<boolean[]>(
-    [...Array(4)].map(() => false)
-  )
-
-  useEffect(() => {
-    if (isRendered) {
-      const intervalId = setInterval(() => {
-        const isFinished = !renderingLists.includes(false)
-        if (isFinished) {
-          clearInterval(intervalId)
-          return
-        }
-        let isChanged = false
-        console.log("Start animation")
-        const newArray = renderingLists.map((bool: boolean): boolean => {
-          if (isChanged || bool) {
-            return bool
-          } else if (!isChanged && !bool) {
-            isChanged = true
-            return !bool
-          }
-          return bool
-        })
-        setRendered(newArray)
-      }, 3000)
-
-      return () => clearInterval(intervalId)
-    }
-  }, [isRendered]) // isRendered
-
   return (
     <div css={mv}>
       <div css={leftArea}>
         <h2 css={title}>Walking</h2>
       </div>
       <div css={rightArea}>
-        <div css={renderingLists[0] ? leftBottom : hidden}>
-          <img src={footprintLeft} alt={footprintAlt} />
-        </div>
-        <div css={renderingLists[1] ? rightBottom : hidden}>
-          <img src={footprintRight} alt={footprintAlt} />
-        </div>
-        <div css={renderingLists[2] ? leftTop : hidden}>
-          <img src={footprintLeft} alt={footprintAlt} />
-        </div>
-        <div css={renderingLists[3] ? rightTop : hidden}>
-          <img src={footprintRight} alt={footprintAlt} />
-        </div>
+        {wrapperCss.map((targetCss, index) => {
+          const isEvenOrZero = index === 0 || index % 2 === 0
+          return (
+            <div css={isRendered ? targetCss : hidden} key={index}>
+              <img
+                src={isEvenOrZero ? footprintLeft : footprintRight}
+                css={img}
+                alt={footprintAlt}
+              />
+            </div>
+          )
+        })}
       </div>
     </div>
   )

@@ -2,8 +2,8 @@
 
 module.exports = {
   siteMetadata: {
-    title: `memomo`,
-    description: `Useful Memo`,
+    title: `warlking`,
+    description: `My dayly studying`,
     author: ``,
   },
   plugins: [
@@ -20,13 +20,13 @@ module.exports = {
         path: `${__dirname}/src/images`,
       },
     },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `markdown-pages`,
-        path: `${__dirname}/src/markdown-pages`,
-      },
-    },
+    // {
+    //   resolve: `gatsby-source-filesystem`,
+    //   options: {
+    //     name: `markdown-pages`,
+    //     path: `${__dirname}/src/markdown-pages`,
+    //   },
+    // },
     {
       resolve: `gatsby-plugin-typescript`,
       options: {},
