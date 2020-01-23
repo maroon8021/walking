@@ -9,14 +9,6 @@ import SEO from "@s/components/common/seo"
 import MV from "@s/components/top/mv"
 
 /* Styles */
-// const blueColor = "#209cee"
-// const blackColor = "#363636"
-
-// const section = css({
-//   padding: "3rem 1.5rem",
-//   maxWidth: "1200px",
-//   margin: "0 auto",
-// })
 
 const IndexPage: React.FC = (): React.ReactElement => {
   const [isRendered, setRendered] = useState<boolean>(false)
