@@ -13,29 +13,60 @@ interface CalendarItemData {
   imgPath: string
 }
 
-interface CalendarRowData {
-  [index: number]: CalendarItemData
+// interface CalendarRowData {
+//   rowData: Array<CalendarItemData>
+//   [index: number]: CalendarItemData
+// }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface CalendarRowData extends Array<CalendarItemData> {
+  rowData: CalendarItemData[]
 }
 
 interface CalendarData {
-  [index: number]: CalendarRowData
+  calendarData: CalendarRowData[]
 }
 
-const Calendar: React.FC = (): React.ReactElement => {
+const Calendar: React.FC<CalendarData> = ({
+  calendarData,
+}): React.ReactElement => {
   return (
     <div css={container}>
-      {}
-      <div css={row}></div>
+      {calendarData.map((rowData: CalendarItemData[], index) => (
+        <CalendarRow key={index} rowData={rowData} />
+      ))}
     </div>
   )
 }
 
 export default Calendar
 
-const CalendarItem: React.FC = (): React.ReactElement => {
+const CalendarRow: React.FC<CalendarRowData> = ({
+  rowData,
+}: {
+  rowData: CalendarItemData[]
+}): React.ReactElement => {
   return (
-    <div css={container}>
-      <div css={mainAreaContents}></div>
+    <div css={row}>
+      {rowData.map(itemData, index => (
+        <CalendarItem key={index} itemData={itemData} />
+      ))}
+    </div>
+  )
+}
+
+const CalendarItem: React.FC<CalendarItemData> = ({
+  itemData,
+}): React.ReactElement => {
+  const { title, imgPath } = itemData
+  return (
+    <div css={itemContainer}>
+      <div css={itemImgBlock}>
+        <img src={imgPath} alt={title} />
+      </div>
+      <div css={itemTitleBlock}>
+        <h4 css={itemTitle}>{title}</h4>
+      </div>
     </div>
   )
 }
