@@ -7,6 +7,7 @@ import axios from "axios"
 import Layout from "@s/components/common/layout"
 import SEO from "@s/components/common/seo"
 import MV from "@s/components/top/mv"
+import MainArea from "@s/components/top/main-area"
 
 /* Styles */
 
@@ -23,6 +24,7 @@ const IndexPage: React.FC = (): React.ReactElement => {
         <meta name="robots" content="noindex" />
       </SEO>
       <MV isRendered={isRendered} />
+      <MainArea />
     </Layout>
   )
 }

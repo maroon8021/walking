@@ -8,31 +8,50 @@ const container = css`
   padding: 0 0.8rem;
 `
 
-interface CalendarItemData {
+const row = css`
+  border: 1px solid #7f7f7f;
+  padding: 8px;
+  display: flex;
+  flex-direction: row;
+`
+
+const itemContainer = css`
+  border: 1px solid #7f7f7f;
+  width: 14%;
+`
+
+const itemImgBlock = css``
+
+const itemTitleBlock = css`
+  text-align: center;
+`
+
+const itemTitle = css``
+
+/* Types */
+export type CalendarItemData = {
   title: string
   imgPath: string
 }
 
-// interface CalendarRowData {
-//   rowData: Array<CalendarItemData>
-//   [index: number]: CalendarItemData
-// }
+export type CalendarRowData = CalendarItemData[]
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface CalendarRowData extends Array<CalendarItemData> {
+type CalendarItemProps = {
+  itemData: CalendarItemData
+}
+
+type CalendarRowProps = {
   rowData: CalendarItemData[]
 }
 
-interface CalendarData {
+type CalendarProps = {
   calendarData: CalendarRowData[]
 }
 
-const Calendar: React.FC<CalendarData> = ({
-  calendarData,
-}): React.ReactElement => {
+const Calendar: React.FC<CalendarProps> = (props): React.ReactElement => {
   return (
     <div css={container}>
-      {calendarData.map((rowData: CalendarItemData[], index) => (
+      {props.calendarData.map((rowData: CalendarItemData[], index) => (
         <CalendarRow key={index} rowData={rowData} />
       ))}
     </div>
@@ -41,21 +60,19 @@ const Calendar: React.FC<CalendarData> = ({
 
 export default Calendar
 
-const CalendarRow: React.FC<CalendarRowData> = ({
+const CalendarRow: React.FC<CalendarRowProps> = ({
   rowData,
-}: {
-  rowData: CalendarItemData[]
 }): React.ReactElement => {
   return (
     <div css={row}>
-      {rowData.map(itemData, index => (
+      {rowData.map((itemData: CalendarItemData, index) => (
         <CalendarItem key={index} itemData={itemData} />
       ))}
     </div>
   )
 }
 
-const CalendarItem: React.FC<CalendarItemData> = ({
+const CalendarItem: React.FC<CalendarItemProps> = ({
   itemData,
 }): React.ReactElement => {
   const { title, imgPath } = itemData
