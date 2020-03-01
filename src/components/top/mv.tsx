@@ -100,28 +100,61 @@ interface MVProps {
   isRendered: boolean
 }
 
+import bgImg from "@s/images/bg-main-1.png"
+import mask from "@s/images/walking-mask.png"
+
+const mvMain = css`
+  width: 100vw;
+  height: 100vh;
+  background-image: url(${bgImg});
+  background-size: contain;
+`
+const imgPath = "/walking-mask.png"
+const mvLeftArea = css`
+  width: 100vw;
+  mask-position: center;
+  mask-image: url(${imgPath});
+  mask-repeat: no-repeat;
+  -webkit-mask-position-x: 30px;
+`
+
+const maskImg = css`
+  width: 60vw;
+  height: 100vh;
+  background-color: #fff;
+`
+
 const MV: React.FC<MVProps> = ({ isRendered = false }): React.ReactElement => {
   return (
-    <div css={isRendered ? mvAfter : mv}>
-      <div css={isRendered ? leftAreaAfter : leftArea}>
-        <h2 css={title}>Walking</h2>
-      </div>
-      <div css={rightArea}>
-        {wrapperCss.map((targetCss, index) => {
-          const isEvenOrZero = index === 0 || index % 2 === 0
-          return (
-            <div css={isRendered ? targetCss : hidden} key={index}>
-              <img
-                src={isEvenOrZero ? footprintLeft : footprintRight}
-                css={img}
-                alt={footprintAlt}
-              />
-            </div>
-          )
-        })}
+    <div css={mvMain}>
+      <div css={maskImg}>
+        <img src={bgImg} css={mvLeftArea} />
       </div>
     </div>
   )
 }
+
+const isRendered = false
+const preveiosDom = (
+  <div css={isRendered ? mvAfter : mv}>
+    <div css={isRendered ? leftAreaAfter : leftArea}>
+      <h2 css={title}>Walking</h2>
+    </div>
+    <div css={rightArea}>
+      {wrapperCss.map((targetCss, index) => {
+        const isEvenOrZero = index === 0 || index % 2 === 0
+        return (
+          <div css={isRendered ? targetCss : hidden} key={index}>
+            <img
+              src={isEvenOrZero ? footprintLeft : footprintRight}
+              css={img}
+              alt={footprintAlt}
+            />
+          </div>
+        )
+      })}
+    </div>
+  </div>
+)
 
 export default MV
