@@ -20,13 +20,6 @@ module.exports = {
         path: `${__dirname}/src/images`,
       },
     },
-    // {
-    //   resolve: `gatsby-source-filesystem`,
-    //   options: {
-    //     name: `markdown-pages`,
-    //     path: `${__dirname}/src/markdown-pages`,
-    //   },
-    // },
     {
       resolve: `gatsby-plugin-typescript`,
       options: {},
@@ -49,11 +42,19 @@ module.exports = {
         alias: {
           "@s": "src",
         },
-        extensions: ["tsx", "png"],
+        extensions: ["tsx", "png", "svg"],
       },
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
+    {
+      resolve: "gatsby-plugin-react-svg",
+      options: {
+        rule: {
+          include: /\.inline\.svg$/,
+        },
+      },
+    },
   ],
 }

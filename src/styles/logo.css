@@ -1,0 +1,22 @@
+path {
+  fill: none; /*塗り*/
+  stroke: #000; /*線の色*/
+  stroke-dasharray: 2000; /*線の間隔*/
+  stroke-dashoffset: 0; /*線の開始位置*/
+  stroke-width: 1; /*線の太さ*/
+  animation: write 2.5s ease-in forwards;
+}
+
+@keyframes write {
+  0% {
+    stroke-dashoffset: 2000;
+    fill: transparent;
+  }
+  50% {
+    fill: transparent;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    fill: #000;
+  }
+}

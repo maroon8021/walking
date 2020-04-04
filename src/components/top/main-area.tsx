@@ -2,8 +2,9 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 /** @jsx jsx */
 import { css, jsx, keyframes } from "@emotion/core"
-import Calendar, { CalendarRowData, CalendarItemData } from "./calendar"
-import tempImg from "@s/images/footprint-left.png"
+import Card, { CardProps } from "./card"
+import dummy from "@s/images/dummy-img.png"
+import { Link } from "gatsby"
 
 /* Styles */
 const mainArea = css`
@@ -15,23 +16,31 @@ const mainAreaHead = css`
 
 const mainAreaContents = css`
   padding: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 `
 
-const item: CalendarItemData = {
-  title: "test",
-  imgPath: tempImg,
+const item = {
+  img: dummy,
+  text: "hogehogehoge hogehogehoge hogehogehogehoge",
+  to: "/works/faceted-navigation/",
 }
 
-const rowData: CalendarRowData = [...Array(7)].map(_ => item)
-
-const data: CalendarRowData[] = [rowData, rowData, rowData, rowData]
+const rowData = [...Array(4)].map(_ => item)
 
 const MainArea: React.FC = (): React.ReactElement => {
   return (
     <div css={mainArea}>
       <h3 css={mainAreaHead}>Footprints</h3>
       <div css={mainAreaContents}>
-        <Calendar calendarData={data} />
+        {rowData.map((data, index) => {
+          return (
+            <Link to={data.to} key={`${data.text}-${index}`}>
+              <Card img={data.img} text={data.text} />
+            </Link>
+          )
+        })}
       </div>
     </div>
   )

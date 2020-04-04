@@ -12,18 +12,12 @@ import MainArea from "@s/components/top/main-area"
 /* Styles */
 
 const IndexPage: React.FC = (): React.ReactElement => {
-  const [isRendered, setRendered] = useState<boolean>(false)
-
-  useEffect(() => {
-    setRendered(!isRendered)
-  }, [])
-
   return (
     <Layout>
       <SEO title="Home" lang="ja">
         <meta name="robots" content="noindex" />
       </SEO>
-      <MV isRendered={isRendered} />
+      <MV />
       <MainArea />
     </Layout>
   )
