@@ -26,6 +26,7 @@ const containerPseudoElement = css`
 const container = css`
   max-width: 300px;
   position: relative;
+  margin-bottom: 1rem;
   &::before {
     ${containerPseudoElement}
 

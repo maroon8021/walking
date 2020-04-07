@@ -1,13 +1,10 @@
 import * as React from "react"
+import { ItemBasetype } from "@s/components/works/faceted-navigation/faceted-elements/parts/parts-base"
 
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core"
 
-export type CheckboxData = {
-  id: number | string
-  value: number | string
-  text: string
-}
+export type CheckboxData = ItemBasetype
 
 export type CheckboxProp = {
   data: CheckboxData
