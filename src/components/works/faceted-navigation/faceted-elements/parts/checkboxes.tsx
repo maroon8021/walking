@@ -1,5 +1,8 @@
 import * as React from "react"
+import { useContext } from "react"
+import { Store } from "@s/components/works/faceted-navigation/context"
 import { ItemBasetype } from "@s/components/works/faceted-navigation/faceted-elements/parts/parts-base"
+import { changeCheckboxValue } from "@s/components/works/faceted-navigation/reducer"
 
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core"
@@ -8,10 +11,12 @@ export type CheckboxData = ItemBasetype
 
 export type CheckboxProp = {
   data: CheckboxData
+  groupKey: any // will be fixed
 }
 
 export type CheckboxesProp = {
   groupName: string
+  groupKey: string
   checkboxesData: CheckboxData[]
 }
 
@@ -26,13 +31,14 @@ const checkboxesName = css`
 
 const Checkboxes: React.FC<CheckboxesProp> = ({
   groupName,
+  groupKey,
   checkboxesData,
 }): React.ReactElement => {
   return (
     <div css={checkboxes}>
       <p css={checkboxesName}>{groupName}</p>
       {checkboxesData.map(data => {
-        return <Checkbox data={data} key={data.id} />
+        return <Checkbox data={data} key={data.id} groupKey={groupKey} />
       })}
     </div>
   )
@@ -59,12 +65,34 @@ const buttonLabel = css``
 
 const checkboxText = css``
 
-const Checkbox: React.FC<CheckboxProp> = ({ data }): React.ReactElement => {
+const Checkbox: React.FC<CheckboxProp> = ({
+  data,
+  groupKey,
+}): React.ReactElement => {
+  const { dispatch } = useContext(Store)
+
+  const onChange = (): void => {
+    dispatch(
+      changeCheckboxValue({
+        id: data.id,
+        isSelected: !data.isSelected,
+        groupKey,
+      })
+    )
+  }
+
   return (
     <label css={checkbox} htmlFor={data.id.toString()}>
       <span css={boxArea}>
         <span css={buttonLabel} />
-        <input type="checkbox" name="" id={data.id.toString()} />
+        <input
+          type="checkbox"
+          name=""
+          id={data.id.toString()}
+          value={data.value}
+          checked={data.isSelected}
+          onChange={onChange}
+        />
       </span>
       <span css={checkboxText}>{data.text}</span>
     </label>

@@ -6,15 +6,20 @@ import { css, jsx, Global } from "@emotion/core"
 import FacetedNavigation from "@s/components/works/faceted-navigation/faceted-elements/faceted-navigation"
 import List from "@s/components/works/faceted-navigation/common/lists"
 import { ItemBasetype } from "@s/components/works/faceted-navigation/faceted-elements/parts/parts-base"
-import Checkboxes, {
-  CheckboxData,
-} from "@s/components/works/faceted-navigation/faceted-elements/parts/checkboxes"
-import Selectbox, {
-  SelectboxData,
-} from "@s/components/works/faceted-navigation/faceted-elements/parts/selectbox"
+import Checkboxes from "@s/components/works/faceted-navigation/faceted-elements/parts/checkboxes"
+import Selectbox from "@s/components/works/faceted-navigation/faceted-elements/parts/selectbox"
 import RangeSlider from "@s/components/works/faceted-navigation/faceted-elements/parts/range-slider"
-import { Store } from "@s/components/works/faceted-navigation/context"
-import { ACTION_TYPE } from "@s/components/works/faceted-navigation/reducer"
+import {
+  Store,
+  FilterItemsType,
+  FilterValuesType,
+  StateType,
+  FILTER_ITEM_KEYS,
+} from "@s/components/works/faceted-navigation/context"
+import {
+  setFilterItem,
+  setFilterState,
+} from "@s/components/works/faceted-navigation/reducer"
 import WorksLayout from "@s/components/common/works-layout"
 import { HEADER_COLOR_TYPE } from "@s/components/common/header"
 import {
@@ -22,6 +27,7 @@ import {
   EMPLOYEE_DATA,
   ENROLL_VIEW_STATUS,
   EmployeeItem,
+  FILTER_ITEMS,
 } from "@s/assets/works/faceted-navigation/employee-data"
 
 const pageStyle = css`
@@ -45,71 +51,23 @@ const listHead = css`
   font-size: 2.5rem;
 `
 
-type TargetFilterType = string | number
+type TargetFilterType = string
 
 const Main: React.FC = (): React.ReactElement => {
   const { state, dispatch } = useContext(Store)
   const [listData, setListData] = useState<EmployeeItem[]>([])
   useEffect(() => {
-    const occupation = getReducedData("occupation") // item of enum should be set, not string itself... will be fixed
-    const gender = getReducedData("gender")
-    const birthplace = getReducedData("birthplace")
-    const enrollementPeriod = getReducedPeriod()
-    const enrolled = ENROLL_VIEW_STATUS.ALL
-    dispatch({
-      type: ACTION_TYPE.SET_INITIAL_STATE,
-      payload: {
-        occupation,
-        gender,
-        birthplace,
-        enrollementPeriod,
-        enrolled,
-      },
-    })
-    console.log(state)
+    initializeFilterItems(dispatch)
   }, [])
 
   useEffect(() => {
-    const newListData = EMPLOYEE_DATA.reduce(
-      (accumulator: EmployeeItem[], currentValue) => {
-        let isTarget = true
-        // occupation
-        const targetOccupations = getFilteringTargets(state.occupation)
-        if (!targetOccupations.includes(currentValue.occupation)) {
-          isTarget = false
-        }
-        // gender
-        const targetGender = getFilteringTargets(state.gender)
-        if (!targetGender.includes(currentValue.gender)) {
-          isTarget = false
-        }
-        // birthplace
-        const targetBirthplace = getFilteringTargets(state.birthplace)
-        if (!targetBirthplace.includes(currentValue.birthplace)) {
-          isTarget = false
-        }
-        // enrollementPeriod
-        if (state.enrollementPeriod < currentValue.enrollmentPeriod) {
-          isTarget = false
-        }
-        // enrolled
-        if (state.enrolled !== ENROLL_VIEW_STATUS.ALL) {
-          if (state.enrolled === ENROLL_VIEW_STATUS.ENROLLED) {
-            isTarget = currentValue.isEnrolled === true
-          } else if (state.enrolled === ENROLL_VIEW_STATUS.NOT_ENROLLED) {
-            isTarget = currentValue.isEnrolled === false
-          }
-        }
-        if (isTarget) {
-          accumulator.push(currentValue)
-        }
-        return accumulator
-      },
-      []
-    )
-    console.log(newListData)
+    filterValues(state.filterItems, dispatch)
+  }, [state.filterItems])
+
+  useEffect(() => {
+    const newListData = getNewListData(state)
     setListData(newListData)
-  }, [state])
+  }, [state.filterValues])
 
   return (
     <WorksLayout
@@ -121,22 +79,30 @@ const Main: React.FC = (): React.ReactElement => {
         <div css={leftArea}>
           <FacetedNavigation>
             <Checkboxes
-              groupName={"Occupation"}
-              checkboxesData={state.occupation}
+              groupName={FILTER_ITEMS.OCCUPATION}
+              groupKey={FILTER_ITEM_KEYS.OCCUPATION}
+              checkboxesData={state.filterItems.occupation}
             />
-            <Checkboxes groupName={"Gender"} checkboxesData={state.gender} />
-            <RangeSlider
-              groupName={"Enrollement Period"}
-              min={1}
-              max={state.enrollementPeriod}
-            />
-            {/* <Selectbox
-              groupName={"Enrolled"}
-              selectOptionsData={rawTestData3}
-            /> */}
             <Checkboxes
-              groupName={"Birthplace"}
-              checkboxesData={state.birthplace}
+              groupName={FILTER_ITEMS.GENDER}
+              groupKey={FILTER_ITEM_KEYS.GENDER}
+              checkboxesData={state.filterItems.gender}
+            />
+            <RangeSlider
+              groupName={FILTER_ITEMS.ENROLLMENT_PERIOD}
+              groupKey={FILTER_ITEM_KEYS.ENROLLMENT_PRERIOD}
+              min={1}
+              max={state.filterItems.enrollmentPeriod.maxValue}
+            />
+            <Selectbox
+              groupName={FILTER_ITEMS.ENROLLED}
+              groupKey={FILTER_ITEM_KEYS.ENROLLED}
+              selectOptionsData={state.filterItems.enrolled}
+            />
+            <Checkboxes
+              groupName={FILTER_ITEMS.BIRTHPLACE}
+              groupKey={FILTER_ITEM_KEYS.BIRTHPLACE}
+              checkboxesData={state.filterItems.birthplace}
             />
           </FacetedNavigation>
         </div>
@@ -151,17 +117,66 @@ const Main: React.FC = (): React.ReactElement => {
 
 export default Main
 
-function getReducedData(key: string) {
+function initializeFilterItems(dispatch: React.Dispatch<any>) {
+  const items = getInitialFilterItems()
+  dispatch(setFilterItem(items))
+}
+
+function filterValues(items: FilterItemsType, dispatch: React.Dispatch<any>) {
+  const state = getInitialFilterState(items)
+  dispatch(setFilterState(state))
+}
+
+function getInitialFilterItems(): FilterItemsType {
+  const occupation = getReducedData(FILTER_ITEMS.OCCUPATION)
+  const gender = getReducedData(FILTER_ITEMS.GENDER)
+  const birthplace = getReducedData(FILTER_ITEMS.BIRTHPLACE)
+  const enrollmentPeriod = getReducedPeriod()
+  const enrolled = getSelectedItems(Object.values(ENROLL_VIEW_STATUS))
+  return { occupation, gender, birthplace, enrollmentPeriod, enrolled }
+}
+
+function getInitialFilterState(items: FilterItemsType): FilterValuesType {
+  const occupation = getFilteringTargets(items.occupation)
+  const gender = getFilteringTargets(items.gender)
+  const birthplace = getFilteringTargets(items.birthplace)
+  const enrollmentPeriod = items.enrollmentPeriod.value
+  const enrolled = getFilteringTarget<ENROLL_VIEW_STATUS>(
+    items.enrolled,
+    Object.values(ENROLL_VIEW_STATUS)
+  ) as ENROLL_VIEW_STATUS
+  return { occupation, gender, birthplace, enrollmentPeriod, enrolled }
+}
+
+function getReducedData(key: FILTER_ITEMS): ItemBasetype[] {
   return EMPLOYEE_DATA.reduce(
     (accumulator: ItemBasetype[], currentValue, index) => {
+      let currentItem: TargetFilterType
+      switch (key) {
+        case FILTER_ITEMS.OCCUPATION:
+          currentItem = currentValue.occupation
+          break
+
+        case FILTER_ITEMS.GENDER:
+          currentItem = currentValue.gender
+          break
+
+        case FILTER_ITEMS.BIRTHPLACE:
+          currentItem = currentValue.birthplace
+          break
+
+        default:
+          throw new Error("Wrong FILTER_ITEMS selected")
+          break
+      }
       const existValue = accumulator.some(item => {
-        return item.value === currentValue[key]
+        return item.value === currentItem
       })
       if (!existValue) {
         accumulator.push({
-          id: `${currentValue[key]}-index`,
-          value: currentValue[key],
-          text: currentValue[key],
+          id: `${currentItem}-${index}`,
+          value: currentItem,
+          text: currentItem,
           isSelected: true,
         })
       }
@@ -172,17 +187,78 @@ function getReducedData(key: string) {
 }
 
 function getReducedPeriod() {
-  return EMPLOYEE_DATA.reduce((accumulator: number, currentValue) => {
+  const maxValue = EMPLOYEE_DATA.reduce((accumulator: number, currentValue) => {
     return accumulator >= currentValue.enrollmentPeriod
       ? accumulator
       : currentValue.enrollmentPeriod
   }, 0)
+  return { value: maxValue, maxValue }
+}
+
+function getSelectedItems(items: string[]) {
+  return items.map((item, index) => {
+    return {
+      id: `${item}-${index}`,
+      text: item,
+      value: item,
+    }
+  })
+}
+
+function getFilteringTarget<T extends string>(
+  targetState: ItemBasetype[],
+  targets: T[]
+) {
+  return targetState.reduce((accumulator: TargetFilterType, currentValue) => {
+    if (currentValue.isSelected) {
+      const target = targets.find((item: any) => {
+        return item === currentValue.value
+      })
+      accumulator = target!
+    }
+    return accumulator
+  }, "")
 }
 
 function getFilteringTargets(targetState: ItemBasetype[]) {
   return targetState.reduce((accumulator: TargetFilterType[], currentValue) => {
     if (currentValue.isSelected) {
       accumulator.push(currentValue.value)
+    }
+    return accumulator
+  }, [])
+}
+
+function getNewListData(state: StateType): EmployeeItem[] {
+  return EMPLOYEE_DATA.reduce((accumulator: EmployeeItem[], currentValue) => {
+    let isTarget = true
+    const { filterValues } = state
+    // occupation
+    if (!filterValues.occupation.includes(currentValue.occupation)) {
+      isTarget = false
+    }
+    // gender
+    if (!filterValues.gender.includes(currentValue.gender)) {
+      isTarget = false
+    }
+    // birthplace
+    if (!filterValues.birthplace.includes(currentValue.birthplace)) {
+      isTarget = false
+    }
+    // enrollmentPeriod
+    if (filterValues.enrollmentPeriod < currentValue.enrollmentPeriod) {
+      isTarget = false
+    }
+    // enrolled
+    if (filterValues.enrolled !== ENROLL_VIEW_STATUS.ALL) {
+      if (filterValues.enrolled === ENROLL_VIEW_STATUS.ENROLLED) {
+        isTarget = currentValue.isEnrolled === true && isTarget
+      } else if (filterValues.enrolled === ENROLL_VIEW_STATUS.NOT_ENROLLED) {
+        isTarget = currentValue.isEnrolled === false && isTarget
+      }
+    }
+    if (isTarget) {
+      accumulator.push(currentValue)
     }
     return accumulator
   }, [])

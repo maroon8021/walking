@@ -1,6 +1,6 @@
 export type ItemBasetype = {
   id: number | string
-  value: number | string
+  value: string
   text: string
-  isSelected: boolean
+  isSelected?: boolean
 }

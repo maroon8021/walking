@@ -1,5 +1,7 @@
 import * as React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
+import { Store } from "@s/components/works/faceted-navigation/context"
+import { changeRangeSliderValue } from "@s/components/works/faceted-navigation/reducer"
 
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core"
@@ -11,6 +13,7 @@ export type RangeSliderData = {
 
 type RangeSliderProps = {
   groupName: string
+  groupKey: any
   min: number
   max: number
 }
@@ -29,11 +32,12 @@ const groupNameStyle = css`
   margin-bottom: 0.8rem;
 `
 
-const rangeSliderStyle = css`
+const rangeSliderStyleBase = css`
   appearance: none;
   background-color: #c7c7c7;
   height: 2px;
   width: 100%;
+  position: relative;
   &:focus,
   &:active {
     outline: none;
@@ -49,6 +53,13 @@ const rangeSliderStyle = css`
     background-color: #262626;
     border-radius: 50%;
   }
+  &::before {
+    content: "";
+    height: 2px;
+    background: #000;
+    left: 0;
+    position: absolute;
+  }
 `
 
 const resultStyle = css`
@@ -58,17 +69,35 @@ const resultStyle = css`
 
 const RangeSlider: React.FC<RangeSliderProps> = ({
   groupName,
+  groupKey,
   min,
   max,
 }): React.ReactElement => {
-  const [result, setResult] = useState(0)
+  const { dispatch } = useContext(Store)
+  const [result, setResult] = useState(max)
+  const [width, setWidth] = useState(100)
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setResult(parseInt(e.currentTarget.value))
+    const value = parseInt(e.currentTarget.value)
+    setResult(value)
+    setWidth((value / max) * 100)
   }
 
+  // https://github.com/facebook/react/issues/2454#issuecomment-76298608
+  const onMouseUp = (e: React.MouseEvent<HTMLInputElement>) => {
+    const value = parseInt(e.currentTarget.value)
+    dispatch(changeRangeSliderValue({ groupKey, value }))
+  }
+
+  const rangeSliderStyle = css`
+    ${rangeSliderStyleBase}
+    &::before {
+      width: ${width}%;
+    }
+  `
+
   useEffect(() => {
-    setResult(max / 2)
+    setResult(max)
   }, [])
 
   return (
@@ -77,12 +106,13 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
       <div css={inner}>
         <input
           type="range"
-          value={result}
           min={min}
           max={max}
           data-unit="%"
           onChange={onChange}
+          onMouseUp={onMouseUp}
           css={rangeSliderStyle}
+          defaultValue={max}
         />
       </div>
       <p css={resultStyle}>{result}</p>
