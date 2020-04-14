@@ -25,6 +25,7 @@ const headerStyleBase = css`
   top: 0;
   width: 100%;
   padding: 0 3rem;
+  z-index: 10;
 `
 
 const subTitleArea = css`
@@ -52,15 +53,16 @@ const Header: React.FC<HeaderProps> = ({
         color: #fff;
         & img {
           filter: invert(88%) sepia(61%) saturate(0%) hue-rotate(229deg)
-            brightness(107%) contrast(101%);
+            brightness(107%) contrast(101%); /* Filtering to white color */
         }
       `
       break
 
-    case HEADER_COLOR_TYPE.BLACK:
+    case HEADER_COLOR_TYPE.WHITE:
       colorStyle = css`
         background-color: #fff;
         color: #000;
+        border-bottom: 1px solid #bdbdbd;
       `
       break
 
