@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useContext } from "react"
+import { useContext, useState, useEffect } from "react"
 import { Store } from "@s/components/works/faceted-navigation/context"
 import { ItemBasetype } from "@s/components/works/faceted-navigation/faceted-elements/parts/parts-base"
 import { changeCheckboxValue } from "@s/components/works/faceted-navigation/reducer"
@@ -70,16 +70,27 @@ const Checkbox: React.FC<CheckboxProp> = ({
   groupKey,
 }): React.ReactElement => {
   const { dispatch } = useContext(Store)
+  const [isChecked, setChecked] = useState(true)
 
   const onChange = (): void => {
-    dispatch(
-      changeCheckboxValue({
-        id: data.id,
-        isSelected: !data.isSelected,
-        groupKey,
-      })
-    )
+    // To improve Checkbox UX
+    setChecked(!data.isSelected)
+    setTimeout(() => {
+      dispatch(
+        changeCheckboxValue({
+          id: data.id,
+          isSelected: !data.isSelected,
+          groupKey,
+        })
+      )
+    }, 500)
   }
+
+  useEffect(() => {
+    if (data.isSelected !== undefined) {
+      setChecked(data.isSelected)
+    }
+  }, [data.isSelected])
 
   return (
     <label css={checkbox} htmlFor={data.id.toString()}>
@@ -90,7 +101,7 @@ const Checkbox: React.FC<CheckboxProp> = ({
           name=""
           id={data.id.toString()}
           value={data.value}
-          checked={data.isSelected}
+          checked={isChecked}
           onChange={onChange}
         />
       </span>

@@ -46,12 +46,14 @@ const SelectBox: React.FC<SelectboxProps> = ({
       item.isSelected = item.value === value
       return item
     })
-    dispatch(
-      changeSelectboxValue({
-        groupKey,
-        selectOptions,
-      })
-    )
+    setTimeout(() => {
+      dispatch(
+        changeSelectboxValue({
+          groupKey,
+          selectOptions,
+        })
+      )
+    }, 500)
   }
 
   return (
