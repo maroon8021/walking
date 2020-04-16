@@ -3,8 +3,8 @@ import { useState, useEffect } from "react"
 /** @jsx jsx */
 import { css, jsx, keyframes } from "@emotion/core"
 import Card, { CardProps } from "./card"
-import dummy from "@s/images/dummy-img.png"
 import { Link } from "gatsby"
+import axios from "axios"
 
 /* Styles */
 const mainArea = css`
@@ -21,23 +21,30 @@ const mainAreaContents = css`
   justify-content: space-around;
 `
 
-const item = {
-  img: dummy,
-  text: "hogehogehoge hogehogehoge hogehogehogehoge",
-  to: "/works/faceted-navigation/",
+type LinkCardType = {
+  imagePath: string
+  title: string
+  to: string
+  demo: string
 }
 
-const rowData = [...Array(4)].map(_ => item)
+//const rowData = [...Array(4)].map(_ => item)
 
 const MainArea: React.FC = (): React.ReactElement => {
+  const [articles, setArticles] = useState<LinkCardType[]>([])
+  useEffect(() => {
+    axios.get("/data.json").then(res => {
+      setArticles(res.data)
+    })
+  }, [])
   return (
     <div css={mainArea}>
       <h3 css={mainAreaHead}>Footprints</h3>
       <div css={mainAreaContents}>
-        {rowData.map((data, index) => {
+        {articles.map((data, index) => {
           return (
-            <Link to={data.to} key={`${data.text}-${index}`}>
-              <Card img={data.img} text={data.text} />
+            <Link to={data.to} key={`${data.title}-${index}`}>
+              <Card img={data.imagePath} text={data.title} demo={data.demo} />
             </Link>
           )
         })}

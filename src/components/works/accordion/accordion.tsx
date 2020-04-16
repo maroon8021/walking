@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useRef } from "react"
 
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core"
@@ -154,6 +155,8 @@ const Accordion: React.FC<AccordionDataType> = ({
   const headImgStyle = isOpened ? headImgOpened : headImg
   const bodyStyle = isOpened ? bodyOpened : body
 
+  const accordionElement = useRef<HTMLDivElement>(null)
+
   const onClick = () => {
     if (isOpened) {
       return
@@ -164,10 +167,27 @@ const Accordion: React.FC<AccordionDataType> = ({
     })
 
     setAccordions(newAccordions)
+    setTimeout(() => {
+      if (accordionElement.current !== null) {
+        const rectTop = accordionElement.current.getBoundingClientRect().top
+        const offsetTop = window.pageYOffset
+        const buffer = 60
+        const top = rectTop + offsetTop - buffer
+        window.scrollTo({
+          top,
+          behavior: "smooth",
+        })
+
+        // accordionElement.current.scrollIntoView({
+        //   behavior: "smooth",
+        //   block: "start",
+        // })
+      }
+    }, 500)
   }
 
   return (
-    <div css={container}>
+    <div css={container} ref={accordionElement}>
       <div css={headStyle} onClick={onClick}>
         <div css={headTitle}>
           <p css={headTitleParaStyle}>{title}</p>

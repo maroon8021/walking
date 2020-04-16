@@ -1,8 +1,7 @@
 import * as React from "react"
 import { useContext, useEffect, useState } from "react"
 
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core"
+import { css } from "@emotion/core"
 
 import SEO from "@s/components/common/seo"
 import WorksLayout from "@s/components/common/works-layout"
@@ -20,6 +19,7 @@ const mainArea = css`
   margin: 0 auto;
   padding-top: 50px;
 `
+
 const accordionData: AccordionContentsType[] = [
   {
     id: 1,

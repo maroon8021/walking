@@ -6,6 +6,7 @@ import { css, jsx, keyframes } from "@emotion/core"
 export type CardProps = {
   img: string
   text: string
+  demo: string
 }
 
 const pseudoElementBase = css`
@@ -47,7 +48,7 @@ const container = css`
     }
     & img {
       transition: all 0.5s ease-in-out;
-      transform: scale(2, 2);
+      transform: scale(1.3, 1.3);
     }
   }
 `
@@ -82,17 +83,25 @@ const inner = css`
 
 const imgArea = css`
   overflow: hidden;
+  width: 300px;
 `
 
 const imgElement = css`
   transition: all 0.5s ease-in-out;
+  max-width: 300px;
+  object-fit: contain;
+  max-height: 200px;
+  margin: 0 auto;
+  display: block;
 `
 
 const textArea = css`
   padding: 20px 10px;
 `
 
-const textContent = css``
+const textContent = css`
+  color: #1976d2;
+`
 
 const Card: React.FC<CardProps> = (props): React.ReactElement => {
   return (

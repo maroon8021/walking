@@ -193,8 +193,15 @@ const rem = css`
   }
 `
 
+const textDecoration = css`
+  a {
+    text-decoration: none;
+  }
+`
+
 export default css`
 ${resetBase}
 ${boxSizingExtend}
 ${rem}
+${textDecoration}
 `

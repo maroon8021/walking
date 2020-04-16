@@ -48,23 +48,23 @@ const footRightBase = css`
   right: 46%;
   transform: scale(1, -1);
 `
-
+const baseStepTop = 100
 const foot1 = css`
   ${footLeftBase}
   animation-delay: 4s;
 `
 const foot2 = css`
-  top: 80px;
+  top: ${baseStepTop}px;
   ${footRightBase}
   animation-delay: 5s;
 `
 const foot3 = css`
-  top: 160px;
+  top: ${baseStepTop * 2}px;
   ${footLeftBase}
   animation-delay: 6s;
 `
 const foot4 = css`
-  top: 240px;
+  top: ${baseStepTop * 3}px;
   ${footRightBase}
   animation-delay: 7s;
 `
