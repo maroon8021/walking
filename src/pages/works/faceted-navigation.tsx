@@ -1,9 +1,4 @@
 import * as React from "react"
-import { useContext, useEffect, useState } from "react"
-
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core"
-
 import Main from "@s/components/works/faceted-navigation/common/main"
 import { Provider } from "@s/components/works/faceted-navigation/context"
 import SEO from "@s/components/common/seo"
