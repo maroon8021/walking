@@ -24,13 +24,12 @@ const head = css`
   display: flex;
   max-height: 125px;
   border-bottom: 1px solid #7f7f7f;
-  cursor: default;
+  cursor: pointer;
 `
 
 const headOpened = css`
   ${head}
-
-  cursor: pointer;
+  cursor: default;
 `
 
 const headTitle = css`
