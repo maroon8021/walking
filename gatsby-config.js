@@ -2,9 +2,10 @@
 
 module.exports = {
   siteMetadata: {
-    title: `warlking`,
-    description: `My dayly studying`,
-    author: ``,
+    title: `Warlking`,
+    description: `My Small Portfolio`,
+    author: `Mitsu`,
+    image: `/walking-mask.png`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,

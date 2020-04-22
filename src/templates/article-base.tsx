@@ -25,12 +25,14 @@ export default function Template({
 }) {
   const { markdownRemark } = data // data.markdownRemark holds our post data
   const { html, frontmatter } = markdownRemark
+  const title = frontmatter.title as string
+  const imagePath = frontmatter.imagePath as string
   return (
     <WorksLayout
       subTitle={"Faceted Navigation"}
       HeaderColorType={HEADER_COLOR_TYPE.WHITE}
     >
-      <SEO title={frontmatter.title} lang="ja">
+      <SEO title={title} image={imagePath}>
         <meta name="robots" content="noindex" />
       </SEO>
       <div css={section}>

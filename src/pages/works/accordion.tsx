@@ -14,6 +14,8 @@ import java from "@s/images/works/accordion/java.png"
 import php from "@s/images/works/accordion/php.png"
 import go from "@s/images/works/accordion/go.png"
 
+import AccordionImage from "@s/images/accordion.png"
+
 const mainArea = css`
   max-width: 600px;
   margin: 0 auto;
@@ -68,7 +70,7 @@ const AccordionPage: React.FC = (): React.ReactElement => {
       subTitle={"Accordion"}
       HeaderColorType={HEADER_COLOR_TYPE.WHITE}
     >
-      <SEO title="Works:Accordion" lang="ja">
+      <SEO title="Works:Accordion" image={AccordionImage}>
         <meta name="robots" content="noindex" />
       </SEO>
       <div css={mainArea}>
