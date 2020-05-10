@@ -28,6 +28,8 @@ const SEO: FC<SECProps> = ({ title, children, image }) => {
 
   const metaDescription = site.siteMetadata.description
   const metaImage = image || site.siteMetadata.defaultImage
+  console.log(metaImage)
+  console.log(image)
   const fullTitle = `${site.siteMetadata.title} - ${title}`
 
   return (
