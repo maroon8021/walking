@@ -6,7 +6,7 @@ imagePath: "/article-images/accordion.png"
 demo: "/works/accordion"
 ---
 
-# Accordion
+## Accordion
 
 ![MainView](/article-images/accordion.png)
 

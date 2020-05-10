@@ -6,11 +6,11 @@ imagePath: "/article-images/todolist3.png"
 demo: "https://todolist3.mitsuna.dev/"
 ---
 
-# todolist3
+## todolist3
 
 ![MainView](/article-images/todolist3.png)
 
-## 概要
+### 概要
 
 個人的な todo 管理アプリです。  
 「Remainig Tasks」のエリアは永続的に保存され、  
@@ -18,7 +18,7 @@ demo: "https://todolist3.mitsuna.dev/"
 
 一日の時間経過がわかるように、過ぎた時間は灰色で表示するようにしています。
 
-## 構成
+### 構成
 
 ![Architecture](/article-images/todolist3-architecture.png) <br><br>
 フルサーバーレスに挑戦しました。

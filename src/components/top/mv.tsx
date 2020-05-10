@@ -5,6 +5,7 @@ import { css, jsx, keyframes } from "@emotion/core"
 
 import footprintRight from "@s/images/footprint-right.png"
 import Logo from "@s/components/top/logo"
+import { BREAKPOINTS } from "../common/style-util"
 
 const footprintAlt = "footprint"
 
@@ -12,6 +13,9 @@ const footprintAlt = "footprint"
 const mvMain = css`
   width: 100%;
   height: 60vh;
+  ${BREAKPOINTS.SM} {
+    margin-bottom: 40px;
+  }
 `
 
 const loopAnimation = keyframes`
@@ -42,11 +46,23 @@ const footBase = css`
 const footLeftBase = css`
   ${footBase}
   left: 46%;
+  ${BREAKPOINTS.MD} {
+    left: 41%;
+  }
+  ${BREAKPOINTS.SM} {
+    left: 38%;
+  }
 `
 const footRightBase = css`
   ${footBase}
   right: 46%;
   transform: scale(1, -1);
+  ${BREAKPOINTS.MD} {
+    right: 43%;
+  }
+  ${BREAKPOINTS.SM} {
+    right: 39%;
+  }
 `
 const baseStepTop = 100
 const foot1 = css`

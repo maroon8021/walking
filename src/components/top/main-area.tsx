@@ -5,13 +5,21 @@ import { css, jsx, keyframes } from "@emotion/core"
 import Card, { CardProps } from "./card"
 import { Link } from "gatsby"
 import axios from "axios"
+import { BREAKPOINTS } from "../common/style-util"
 
 /* Styles */
 const mainArea = css`
   padding: 0 1.6rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  ${BREAKPOINTS.MD} {
+    margin-bottom: 4rem;
+  }
 `
+
 const mainAreaHead = css`
   padding: 0.8rem;
+  font-size: 24px;
 `
 
 const mainAreaContents = css`
@@ -19,6 +27,10 @@ const mainAreaContents = css`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+`
+
+const linkStyle = css`
+  margin-bottom: 2.4rem;
 `
 
 type LinkCardType = {
@@ -43,7 +55,7 @@ const MainArea: React.FC = (): React.ReactElement => {
       <div css={mainAreaContents}>
         {articles.map((data, index) => {
           return (
-            <Link to={data.to} key={`${data.title}-${index}`}>
+            <Link to={data.to} key={`${data.title}-${index}`} css={linkStyle}>
               <Card img={data.imagePath} text={data.title} demo={data.demo} />
             </Link>
           )

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 /** @jsx jsx */
 import { css, jsx, keyframes } from "@emotion/core"
 
@@ -24,7 +24,19 @@ const containerPseudoElement = css`
   height: 2px;
 `
 
-const container = css`
+const containerHovered = css`
+  &::before,
+  &::after {
+    width: 100%;
+    width: calc(100% + 1px);
+  }
+  & img {
+    transition: all 0.5s ease-in-out;
+    transform: scale(1.3, 1.3);
+  }
+`
+
+const containerBase = css`
   max-width: 300px;
   position: relative;
   margin-bottom: 1rem;
@@ -39,18 +51,18 @@ const container = css`
     top: -1px;
     left: -1px;
   }
+`
 
+const container = css`
+  ${containerBase}
   &:hover {
-    &::before,
-    &::after {
-      width: 100%;
-      width: calc(100% + 1px);
-    }
-    & img {
-      transition: all 0.5s ease-in-out;
-      transform: scale(1.3, 1.3);
-    }
+    ${containerHovered}
   }
+`
+
+const containerSPHovered = css`
+  ${containerBase}
+  ${containerHovered}
 `
 
 const innerPseudoElement = css`
@@ -59,7 +71,15 @@ const innerPseudoElement = css`
   height: 0px;
 `
 
-const inner = css`
+const innerHovered = css`
+  &::before,
+  &::after {
+    height: 100%;
+    height: calc(100% + 1px);
+  }
+`
+
+const innerBase = css`
   &::before {
     ${innerPseudoElement}
 
@@ -71,14 +91,19 @@ const inner = css`
     top: -1px;
     right: -1px;
   }
+`
+
+const inner = css`
+  ${innerBase}
 
   &:hover {
-    &::before,
-    &::after {
-      height: 100%;
-      height: calc(100% + 1px);
-    }
+    ${innerHovered}
   }
+`
+
+const innerSPHovered = css`
+  ${innerBase}
+  ${innerHovered}
 `
 
 const imgArea = css`
@@ -104,9 +129,32 @@ const textContent = css`
 `
 
 const Card: React.FC<CardProps> = (props): React.ReactElement => {
+  const [showHoverStyle, setShowHoverStyle] = useState(false)
+  const cardElement = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (window.screen.width >= 400) {
+      // isPC
+      return
+    }
+    if (cardElement.current !== null) {
+      const targetElement = cardElement.current
+      const targetLine = Math.floor(window.screen.height * 0.6)
+      window.addEventListener("scroll", () => {
+        const currentPositon = Math.floor(
+          targetElement.getBoundingClientRect().top
+        )
+        setShowHoverStyle(currentPositon <= targetLine)
+      })
+    }
+  }, [])
+
   return (
-    <div css={container}>
-      <div css={inner}>
+    <div
+      css={showHoverStyle ? containerSPHovered : container}
+      ref={cardElement}
+    >
+      <div css={showHoverStyle ? innerSPHovered : inner}>
         <div css={imgArea}>
           <img src={props.img} alt="" css={imgElement} />
         </div>

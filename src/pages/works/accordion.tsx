@@ -15,11 +15,15 @@ import php from "@s/images/works/accordion/php.png"
 import go from "@s/images/works/accordion/go.png"
 
 import AccordionImage from "@s/images/accordion.png"
+import { BREAKPOINTS } from "@s/components/common/style-util"
 
 const mainArea = css`
   max-width: 600px;
   margin: 0 auto;
   padding-top: 50px;
+  ${BREAKPOINTS.SM} {
+    max-width: 300px;
+  }
 `
 
 const accordionData: AccordionContentsType[] = [

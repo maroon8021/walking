@@ -6,7 +6,7 @@ imagePath: "/article-images/memomo.png"
 demo: "https://memomo.mitsuna.dev/"
 ---
 
-# memomo
+## memomo
 
 ![MainView](/article-images/memomo.png)
 

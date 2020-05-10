@@ -6,7 +6,7 @@ imagePath: "/article-images/faceted-navigation.png"
 demo: "/works/faceted-navigation"
 ---
 
-# Faceted Navigation
+## Faceted Navigation
 
 ![MainView](/article-images/faceted-navigation.png)
 

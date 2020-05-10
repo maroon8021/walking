@@ -7,11 +7,16 @@ import { HEADER_COLOR_TYPE } from "@s/components/common/header"
 import SEO from "@s/components/common/seo"
 
 import "github-markdown-css"
+import { BREAKPOINTS } from "@s/components/common/style-util"
 
 const section = css`
   padding: 3rem 1.5rem;
   max-width: 760px;
   margin: 0 auto;
+
+  ${BREAKPOINTS.SM} {
+    padding: 3rem;
+  }
 
   & article {
     & img {

@@ -3,6 +3,7 @@ import { Link } from "gatsby"
 /** @jsx jsx */
 import { css, jsx, keyframes } from "@emotion/core"
 import Logo from "@s/images/walking-logo.png"
+import { BREAKPOINTS } from "./style-util"
 
 export const HEADER_COLOR_TYPE = {
   BLACK: "black",
@@ -34,6 +35,10 @@ const subTitleArea = css`
 
 const subTitleStyle = css`
   font-size: 2rem;
+  ${BREAKPOINTS.SM} {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+  }
 `
 
 const imgStyle = css`
