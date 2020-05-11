@@ -14,7 +14,7 @@ const mvMain = css`
   width: 100%;
   height: 60vh;
   ${BREAKPOINTS.SM} {
-    margin-bottom: 40px;
+    margin-bottom: 12rem;
   }
 `
 

@@ -133,7 +133,7 @@ const Card: React.FC<CardProps> = (props): React.ReactElement => {
   const cardElement = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (window.screen.width >= 400) {
+    if (window.screen.width >= 415) {
       // isPC
       return
     }

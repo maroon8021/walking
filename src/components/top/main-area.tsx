@@ -13,7 +13,7 @@ const mainArea = css`
   max-width: 1000px;
   margin: 0 auto;
   ${BREAKPOINTS.MD} {
-    margin-bottom: 4rem;
+    margin-bottom: 8rem;
   }
 `
 
