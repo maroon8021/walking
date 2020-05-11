@@ -33,10 +33,7 @@ export default function Template({
   const title = frontmatter.title as string
   const imagePath = frontmatter.imagePath as string
   return (
-    <WorksLayout
-      subTitle={"Faceted Navigation"}
-      HeaderColorType={HEADER_COLOR_TYPE.WHITE}
-    >
+    <WorksLayout subTitle={title} HeaderColorType={HEADER_COLOR_TYPE.WHITE}>
       <SEO title={title} image={imagePath}>
         <meta name="robots" content="noindex" />
       </SEO>
