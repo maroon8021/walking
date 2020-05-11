@@ -2,7 +2,7 @@
 
 module.exports = {
   siteMetadata: {
-    title: `Warlking`,
+    title: `Walking`,
     description: `My Small Portfolio`,
     author: `Mitsu`,
     image: `/walking-mask.png`,
