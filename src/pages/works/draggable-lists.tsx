@@ -13,7 +13,7 @@ import {
   StateType,
   reducer,
 } from "@s/components/works/draggagble-lists/reducers"
-import { LogViewer } from "./log-viewer"
+import { LogViewer } from "@s/components/works/draggagble-lists/log-viewer"
 import DraggableListsImage from "@s/images/draggable-lists.png"
 
 const mainArea = css`
