@@ -1,5 +1,5 @@
 import * as React from "react"
-import { FC, ReactElement, useState, Dispatch } from "react"
+import { FC, ReactElement, useState, Dispatch, useRef } from "react"
 /** @jsx jsx */
 import { css, jsx, keyframes } from "@emotion/core"
 import {
@@ -15,6 +15,7 @@ const listStyle = css`
   border-radius: 5px;
   margin-bottom: 0.4rem;
   cursor: grab;
+  touch-action: none;
 `
 const draggingAnimation = keyframes`
   0% {
@@ -36,18 +37,59 @@ type List = {
   dispatch: Dispatch<ActionType>
 }
 
+const targetId = "dragging-list"
+
 export const List: FC<List> = ({ title, dispatch }): ReactElement => {
   const [isDragging, setDragging] = useState(false)
-  const onDragStart = () => {
+
+  const listElement = useRef<HTMLDivElement>(null)
+  const onDragStart = (): void => {
     setDragging(true)
     dispatch(setDraggingList(title))
   }
-  const onDragOver = () => {
+  const onDragOver = (): void => {
     dispatch(changeOrder(title))
   }
-  const onDragEnd = () => {
+  const onDragEnd = (): void => {
     setDragging(false)
     dispatch(finishDraggingList())
+  }
+
+  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>): void => {
+    console.log(e)
+    console.log(e.changedTouches[0].pageY)
+    console.log("onTouchStart")
+    const { pageX, pageY } = e.changedTouches[0]
+    if (listElement.current !== null) {
+      const clone = listElement.current.cloneNode() as HTMLDivElement
+      const width = listElement.current.clientWidth
+      console.log(listElement.current.style)
+      clone.id = targetId
+      clone.innerText = listElement.current.innerText
+      clone.setAttribute(
+        "style",
+        `position: absolute; opacity: 0.5; top: ${pageY}px; left: ${pageX}px; width: ${width}px;`
+      )
+      document.body.appendChild(clone)
+
+      e.preventDefault()
+    }
+  }
+
+  const onTouchMove = (e: React.TouchEvent<HTMLDivElement>): void => {
+    const { pageX, pageY } = e.changedTouches[0]
+    const clone = document.getElementById(targetId)
+    if (clone) {
+      clone.setAttribute(
+        "style",
+        `position: absolute; opacity: 0.5; top: ${pageY}px; left: ${pageX}px; width: ${clone.style.width};`
+      )
+    }
+  }
+
+  const onTouchEnd = (): void => {
+    const clone = document.getElementById(targetId)
+    clone && clone.remove()
   }
   return (
     <div
@@ -56,6 +98,10 @@ export const List: FC<List> = ({ title, dispatch }): ReactElement => {
       onDragStart={onDragStart}
       onDragEnter={onDragOver}
       onDragEnd={onDragEnd}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      ref={listElement}
     >
       {title}
     </div>
