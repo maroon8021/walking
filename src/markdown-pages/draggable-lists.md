@@ -12,8 +12,7 @@ demo: "/works/draggable-lists"
 
 [Go to Demo Page](/works/draggable-lists)
 
-Lists を drag で移動できます  
-※現時点では PC のみ動く。SP もちゃんと対応したい
+Lists を drag で移動できます
 
 [Page Code](https://github.com/maroon8021/walking/blob/master/src/pages/works/draggable-lists.tsx)
 

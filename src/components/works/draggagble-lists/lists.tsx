@@ -1,5 +1,5 @@
 import * as React from "react"
-import { FC, ReactElement, useState, Dispatch, useRef } from "react"
+import { FC, ReactElement, useState, Dispatch, useRef, useEffect } from "react"
 /** @jsx jsx */
 import { css, jsx, keyframes } from "@emotion/core"
 import {
@@ -7,6 +7,8 @@ import {
   setDraggingList,
   changeOrder,
   finishDraggingList,
+  setPositionList,
+  movePosition,
 } from "./reducers"
 
 const listStyle = css`
@@ -41,8 +43,8 @@ const targetId = "dragging-list"
 
 export const List: FC<List> = ({ title, dispatch }): ReactElement => {
   const [isDragging, setDragging] = useState(false)
-
   const listElement = useRef<HTMLDivElement>(null)
+
   const onDragStart = (): void => {
     setDragging(true)
     dispatch(setDraggingList(title))
@@ -56,9 +58,6 @@ export const List: FC<List> = ({ title, dispatch }): ReactElement => {
   }
 
   const onTouchStart = (e: React.TouchEvent<HTMLDivElement>): void => {
-    console.log(e)
-    console.log(e.changedTouches[0].pageY)
-    console.log("onTouchStart")
     const { pageX, pageY } = e.changedTouches[0]
     if (listElement.current !== null) {
       const clone = listElement.current.cloneNode() as HTMLDivElement
@@ -71,6 +70,7 @@ export const List: FC<List> = ({ title, dispatch }): ReactElement => {
         `position: absolute; opacity: 0.5; top: ${pageY}px; left: ${pageX}px; width: ${width}px;`
       )
       document.body.appendChild(clone)
+      dispatch(setDraggingList(title))
 
       e.preventDefault()
     }
@@ -84,13 +84,33 @@ export const List: FC<List> = ({ title, dispatch }): ReactElement => {
         "style",
         `position: absolute; opacity: 0.5; top: ${pageY}px; left: ${pageX}px; width: ${clone.style.width};`
       )
+      dispatch(movePosition(pageY))
     }
   }
 
   const onTouchEnd = (): void => {
     const clone = document.getElementById(targetId)
     clone && clone.remove()
+    dispatch(finishDraggingList())
   }
+
+  const onContextMenu = (e: Event): void => {
+    e.preventDefault()
+  }
+
+  useEffect(() => {
+    if (listElement.current !== null) {
+      const clientRect = listElement.current.getBoundingClientRect()
+      const height = listElement.current.clientHeight
+      dispatch(
+        setPositionList({
+          top: clientRect.top,
+          bottom: clientRect.top + height,
+        })
+      )
+    }
+  }, [])
+
   return (
     <div
       css={isDragging ? listDraggingStyle : listStyle}
@@ -101,6 +121,7 @@ export const List: FC<List> = ({ title, dispatch }): ReactElement => {
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
+      onContextMenu={onContextMenu}
       ref={listElement}
     >
       {title}

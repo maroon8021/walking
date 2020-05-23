@@ -1,9 +1,9 @@
 import * as React from "react"
-import { FC, ReactElement, useReducer, Dispatch } from "react"
+import { FC, ReactElement, Dispatch } from "react"
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core"
 import { List } from "./lists"
-import { reducer, StateType, ActionType } from "./reducers"
+import { ActionType } from "./reducers"
 
 const container = css`
   width: 100%;
