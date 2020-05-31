@@ -94,7 +94,7 @@ export const List: FC<List> = ({ title, dispatch }): ReactElement => {
     dispatch(finishDraggingList())
   }
 
-  const onContextMenu = (e: Event): void => {
+  const onContextMenu = (e: React.SyntheticEvent<HTMLDivElement>): void => {
     e.preventDefault()
   }
 
